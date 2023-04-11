@@ -5,8 +5,19 @@ import customtkinter
 import threading
 from textsummarization import TextSummarization
 from speechtotext import SpeechToText
+from flask import Flask, request, jsonify
 
 
+app = Flask(__name__)
+
+@app.route("/summarize", methods=["POST"])
+def sumarize():
+    data = request.get_json()
+    processed_data = data["data"].upper()
+
+    return jsonify({"processed_data": processed_data})
+
+'''
 class AudioRecorder:
     def __init__(self, root):
 
@@ -122,3 +133,4 @@ audio_recorder = AudioRecorder(root)
 
 # Run the main loop
 root.mainloop()
+'''
