@@ -5,17 +5,28 @@ import customtkinter
 import threading
 from textsummarization import TextSummarization
 from speechtotext import SpeechToText
-from flask import Flask, request, jsonify
-
+from flask import Flask, request, make_response
+import os
 
 app = Flask(__name__)
 
-@app.route("/summarize", methods=["POST"])
-def sumarize():
-    data = request.get_json()
-    processed_data = data["data"].upper()
+@app.route('/upload', methods=['POST'])
+def upload():
+    '''
+    Input: .txt file
+    Return: attachment in all caps
+    '''
+    file = request.files['file']
+    filename = file.filename
 
-    return jsonify({"processed_data": processed_data})
+    if filename.endswith('.txt'):
+        text = file.read().decode('utf-8').upper()
+        response = make_response(text)
+        response.headers.set('Content-Disposition', 'attachment', filename=filename)
+        response.headers.set('Content-Type', 'text/plain')
+        return response
+    else:
+        return "Error: Invalid file format, please upload .txt file"
 
 '''
 class AudioRecorder:
