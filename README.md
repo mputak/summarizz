@@ -41,6 +41,5 @@ pip install git+https://github.com/openai/whisper.git
 Where ```self.temperature``` is a value between 0 and 1. The higher the value, the more abstract the summary will be and vice versa.
 
 ## API:
-- Takes JSON as input
-- Processes "data" key from JSON
-- Returns JSON with "processed_data" key/val pair
+- Takes .txt as input
+- Returns text as attachment in all caps
