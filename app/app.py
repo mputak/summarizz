@@ -1,8 +1,11 @@
+import os
+from pathlib import Path
+
 from flask import Flask, request, render_template, redirect, flash
 from werkzeug.utils import secure_filename
-import os
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+
+UPLOAD_FOLDER = Path("../../uploads").resolve()
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "$u$$y"
@@ -17,13 +20,13 @@ def groove_street():
 def upload_file():
     return render_template("upload.html")
 
-@app.route('/uploader', methods=['POST'])
+
+
+@app.post('/uploader')
 def uploader_file():
-    if request.method == "POST":
-        f = request.files["file"]
-        f.save(os.path.join(app.config["UPLOAD FOLDER"], secure_filename(f.filename)))
-        flash("File uploaded successfully!")
-        return redirect("/")
+    f = request.files["file"]
+    f.save(os.path.join(app.config["UPLOAD FOLDER"], secure_filename(f.filename)))
+    return redirect("/")
     
     
 if __name__ == "__main__":
