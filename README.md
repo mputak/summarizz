@@ -39,7 +39,3 @@ pip install git+https://github.com/openai/whisper.git
         TextSummarization(self.text, self.temperature)
 ```
 Where ```self.temperature``` is a value between 0 and 1. The higher the value, the more abstract the summary will be and vice versa.
-
-## API:
-- Takes .txt as input
-- Returns text as attachment in all caps
