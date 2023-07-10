@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  storage:
+    image: quay.io/minio/minio:latest
+    command: server /mnt/data --console-address ":9090"
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+      - ./minio-data:/mnt/data
+    env_file:
+      - ./minio.env
+  pyapi:
+    build: ./pyapi
+    depends_on:
+      - storage
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./minio.env
+    environment:
+      - UPLOAD_BUCKET=${UPLOAD_BUCKET:-uploads}
+      - MINIO_ENDPOINT=storage:9000
+  webapp:
+    build: 
+      context: ./webapp
+      args:
+        - NEXT_PUBLIC_PYAPI_ENDPOINT="http://pyapi:5000"
+    depends_on:
+      - pyapi
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_PYAPI_ENDPOINT="http://pyapi:5000"
